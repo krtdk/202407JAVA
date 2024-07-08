@@ -8,6 +8,7 @@ public class ScannerExample {
 		String inputData;
 		
 		while(true) {
+			System.out.println("문자 입력: ");
 			inputData = scanner.nextLine();
 			System.out.println("입력된 문자열: \"" + inputData + "\"");
 			if(inputData.equals("q")) {
