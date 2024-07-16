@@ -1,12 +1,23 @@
-package java0716;
+package project2Swing;
 
 import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+
+
 
 public class MyFrame extends JFrame {
 	JLabel lb1 = new JLabel("학생 수");
@@ -20,10 +31,25 @@ public class MyFrame extends JFrame {
 	JButton jb3 = new JButton("예금");
 	JButton jb4 = new JButton("출금");
 	JButton jb5 = new JButton("잔고");
-
 	JTextArea ta = new JTextArea();
+	List<Member> list = null; // = new ArrayList<>();
+	Member member = null;
 	
 	public MyFrame() {
+		
+		int memCnt = 0;
+		
+		try (FileInputStream fis = new FileInputStream("c:\\temp\\members1.dat");
+	             ObjectInputStream ois = new ObjectInputStream(fis)) {
+			Member[] list2 = (Member[]) ois.readObject();
+			list = new ArrayList<>(Arrays.asList(list2));
+
+			System.out.println("파일에서 객체를 가져왔습니다.");	
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		
 		Container con = this.getContentPane();
 		con.setLayout(null);
 		con.add(lb1);
@@ -56,6 +82,8 @@ public class MyFrame extends JFrame {
 		con.add(jb1);
 		jb1.addActionListener(new MyListener());
 		
+		
+		
 		jb2.setLocation(120, 350);
 		jb2.setSize(100, 30);
 		con.add(jb2);
@@ -78,8 +106,29 @@ public class MyFrame extends JFrame {
 		this.setSize(300,300);
 		this.setVisible(true);
 	}
+	
+	class MyListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			String name = jt1.getText();// name 변수의 값 입력
+			String strPassword = jt2.getText();
+			
+			for (int i=0; i < list.size(); i++) {
+                if (list.get(i).getName().equals(name) && list.get(i).getSsn().equals(strPassword)) {
+					member = list.get(i);
+					break;
+				}
+			}
+			System.out.println(member);
+		}
+		
+	}
+	
 	public static void main(String[] args) {
 		new MyFrame();
+		
 		
 	}
 }
